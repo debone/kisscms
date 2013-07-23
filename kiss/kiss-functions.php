@@ -5,6 +5,20 @@
 */
 
 /**
+* function debug
+* Para debug
+*/
+function debug($var){
+	echo'<pre>';
+	if(is_array($var)){
+		print_r($var);
+	}else{
+		var_dump($var);
+	}
+	echo'</pre>';
+}
+
+/**
 * function fullUrl
 * Mostra a URL completa quando chamado
 *
