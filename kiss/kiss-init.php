@@ -7,7 +7,7 @@
 //Inclusão de arquivos
 require(KISS_PATH.'kiss-functions.php');
 require(KISS_PATH.'kiss-session.php');
-require(KISS_PATH.'kiss-pages.php');
+require(KISS_PATH.'kiss-pieces.php');
 
 function kissInit(){
 	global $request;
@@ -26,6 +26,9 @@ function kissInit(){
 
 	// Formato da requisição (HTTP, JSON)
 	$request['format'] = parseFormat();
+
+	// Função principal
+	kissMain();
 }
 
 function checkKiss(){
@@ -95,4 +98,23 @@ function parseFormat(){
 	}
 
 	return $format;
+}
+
+/**
+ * [kissMain description]
+ * @return [type] [description]
+ */
+function kissMain(){
+	global $request, $piece;
+	/**
+	 * TODO
+	 * Leitor de aliases e erros 404
+	 */
+	if($request['url'][0] === NULL){
+		$piece = 'page';
+	}else{
+		$piece = $request['url'][0];
+	}
+
+	kissPieces();
 }

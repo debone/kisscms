@@ -6,8 +6,8 @@
 */
 
 define("ABS_PATH", __DIR__.DIRECTORY_SEPARATOR);
-
 define("KISS_PATH", ABS_PATH.'kiss'.DIRECTORY_SEPARATOR);
+define("SITE_PATH", ABS_PATH.'site'.DIRECTORY_SEPARATOR);
 
 require(KISS_PATH."kiss-config.php");
 
@@ -18,7 +18,5 @@ ob_start();
 kissInit();
 
 global $request;
-
-debug($request);
 
 ob_end_flush();

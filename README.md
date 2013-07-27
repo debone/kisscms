@@ -8,7 +8,7 @@ Tipos de página implementadas por arquivos modelo
 ## Steps
 
 v0.1 REST funcionar - Completa
-v0.2 Tipo de pagina conteudo(pagina?)
+v0.2 Tipo de pagina conteudo(pagina?) - Completa
 v0.21 CRUD de conteudo via REST (baretext editing & viewing - NO HTML)
 v0.3 Sessão de usuários 
 v0.4 Inserção de JS no conteudo
