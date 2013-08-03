@@ -22,4 +22,9 @@ function pieceGlue(){
 		$func = $piece.'\\init';
 		$func();
 	}
+
+	$verbFunc = $piece.'\\'.$request['verb'];
+	if(function_exists($verbFunc)){
+		$verbFunc();
+	}
 }
