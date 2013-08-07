@@ -2,14 +2,16 @@
 namespace richtext;
 
 function init(){
-	d($_POST);
-	form();
+	global $r;
+	$p = $r['parameters'];
+
+	form($p['action'], $p['content']);
 }
 
-function form($action=''){
+function form($action='', $content=''){
 	?>
 	<form method="post" action="<?php echo $action; ?>">
-		<textarea name="page"></textarea>
+		<textarea name="page"><?=$content?></textarea>
 		<input type="submit">
 	</form>
 	<?php

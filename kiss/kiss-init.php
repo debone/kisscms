@@ -10,22 +10,22 @@ require(KISS_PATH.'kiss-session.php');
 require(KISS_PATH.'kiss-pieces.php');
 
 function kissInit(){
-	global $request;
+	global $r;
 
 	//Checar se está tudo ok
 	checkKiss();
 
 	// Verbo da requisição (GET,POST,PUT,DELETE)
-	$request['verb'] = parseVerb();
+	$r['verb'] = parseVerb();
 
 	// URL da requisição (/page/2034)
-	$request['url'] = parseUrl();
+	$r['url'] = parseUrl();
 
 	// Parametros da requisição (GET,POST,JSON)
-	$request['parameters'] = parseParameters();
+	$r['parameters'] = parseParameters();
 
 	// Formato da requisição (HTTP, JSON)
-	$request['format'] = parseFormat();
+	$r['format'] = parseFormat();
 
 	// Função principal
 	kissMain();
@@ -42,8 +42,8 @@ function parseVerb(){
 }
 
 function parseUrl(){
-	$request = str_replace($_SERVER['CONTEXT_PREFIX'].'/', '', $_SERVER['REQUEST_URI']);
-	return array_filter(explode('/', $request));
+	$r = str_replace($_SERVER['CONTEXT_PREFIX'].'/', '', $_SERVER['REQUEST_URI']);
+	return array_filter(explode('/', $r));
 }
 
 function parseParameters(){
@@ -81,6 +81,12 @@ function parseParameters(){
 		}
 	}
 
+	if(isset($_POST)){
+		foreach($_POST as $field => $value){
+			$parameters[$field] = $value;
+		}	
+	}
+	
 	return $parameters;
 }
 
@@ -105,15 +111,15 @@ function parseFormat(){
  * @return [type] [description]
  */
 function kissMain(){
-	global $request, $piece;
+	global $r, $piece;
 	/**
 	 * TODO
 	 * Leitor de aliases e erros 404
 	 */
-	if($request['url'][0] === NULL){
+	if($r['url'][0] === NULL){
 		$piece = 'page';
 	}else{
-		$piece = $request['url'][0];
+		$piece = $r['url'][0];
 	}
 
 	kissPieces();

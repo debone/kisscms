@@ -39,6 +39,14 @@ function fullUrl(){
 }
 
 /**
+ * function absUrl
+ * Monta uma url absoluto para a url requisitada
+ */
+function absUrl($url){
+	return $_SERVER['CONTEXT_PREFIX'].'/'.implode('/',$url);
+}
+
+/**
 *	function r()
 *	Faz requisições REST internas
 *
@@ -71,13 +79,16 @@ function r($url, $data=null, $headers=null){
 	if($headers && $headers!=''){
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 	}
-	if($data && $data!=''){
+	if($data && $data!='' && is_array($data)){
 		$fieldsString = '';
 		foreach ($data as $k => $v) {
 			$fields_string .= $key.'='.urlencode($value).'&';
 		}
 		rtrim($fields_string, '&');
 		curl_setopt($ch, CURLOPT_POST, count($data));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	}elseif($data && $data!='' && is_string($data)){
+		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 	}
 

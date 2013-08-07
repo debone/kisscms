@@ -2,9 +2,6 @@
 
 Tipos de página implementadas por arquivos modelo
 
-
-
-
 ## Steps
 
 v0.1 REST funcionar - Completa
@@ -23,3 +20,4 @@ v3.0 Rich Text Editor(Nome genérico para permitir possibilidades de interface p
 
 ## TODO
 - Criador de .htaccess para o RewriteBase estar sempre correto
+- Tratamento de erros $router
