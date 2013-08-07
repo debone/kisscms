@@ -23,7 +23,10 @@ function pieceGlue(){
 		$func();
 	}
 
-	$verbFunc = $piece.'\\'.$r['verb'];
+	$verbFunc = (!isset($r['parameters']['_method_delete'])) ?
+				$piece.'\\'.$r['verb'] :
+				$piece.'\\delete';
+
 	if(function_exists($verbFunc)){
 		$verbFunc();
 	}

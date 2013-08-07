@@ -41,6 +41,18 @@ function post(){
 	d('Salvar página');
 }
 
+function delete(){
+	global $r;
+
+	$page = $r['url'][1];
+
+	if($pg = pageLocal($page)){
+		unlink($pg);
+	}
+
+	d('Deletar pagina!');
+}
+
 function pageLocal($page){
 	global $r;
 
