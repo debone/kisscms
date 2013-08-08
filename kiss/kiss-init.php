@@ -122,5 +122,6 @@ function kissMain(){
 		$piece = $r['url'][0];
 	}
 
+	kissSession();
 	kissPieces();
 }

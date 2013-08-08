@@ -10,6 +10,7 @@ function get(){
 	$pageLocal = pageLocal($r['url'][1]);
 
 	if($pageLocal !== ''){
+		echo session_id();
 		echo file_get_contents($pageLocal);
 		pieceRoute(array(
 			'edit'
