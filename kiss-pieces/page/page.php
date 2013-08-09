@@ -5,20 +5,21 @@ function init(){
 	global $r;
 }
 
-function get(){
+function get($output){
 	global $r, $pageLocal;
+
 	$pageLocal = pageLocal($r['url'][1]);
 
 	if($pageLocal !== ''){
-		echo session_id();
-		echo file_get_contents($pageLocal);
+		$output .= file_get_contents($pageLocal);
 		pieceRoute(array(
 			'edit'
 		));
 	}else{
-		echo r('richtext', array('piece'=>'page', 'action'=>absUrl($r['url']), 'content'=>''));
-		d('Criar pagina');
+		$output .= r('richtext', array('piece'=>'page', 'action'=>absUrl($r['url']), 'content'=>''));
 	}
+
+	return $output;
 }
 
 function post(){
@@ -57,7 +58,7 @@ function delete(){
 function pageLocal($page){
 	global $r;
 
-	if($page ==NULL || !is_integer($page+0)){
+	if($page == NULL){
 		$page = 0;
 	}
 
@@ -80,4 +81,51 @@ function edit(){
 		'content' => file_get_contents($pageLocal)
 	));
 	d('Editar pagina');
+}
+
+function head(){
+	global $css;
+
+	$content = '<html>';
+	$content .= '<head>';
+	$content .= '<title>KISSCMS</title>';
+	$content .= '<meta charset="utf-8">';
+
+	if(is_array($css)){
+		$content .= '<style>'; 
+		foreach($css as $code){
+			$content .= $code;
+		}
+		$content .= '</style>';
+	}
+
+	$content .= '</head><body>';
+
+	return $content;
+}
+
+function footer(){
+	global $js;
+	$content = '';
+
+	if(is_array($js)){
+		$content .= '<script>';
+		foreach($js as $code){
+			$content .= $code;
+		}
+		$content .= '</script>';
+	}
+
+	$content .= '</body></html>';
+	return $content;
+}
+
+function quit($output){
+	$o = head();
+	
+	$o .= $output;
+	
+	$o .= footer();
+
+	return $o;
 }

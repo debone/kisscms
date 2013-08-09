@@ -1,19 +1,26 @@
 <?php
 namespace richtext;
 
-function init(){
+function main(){
 	global $r;
 	$p = $r['parameters'];
 
-	form($p['action'], $p['content']);
+	$output['html'] = form($p['action'], $p['content']);
+
+	$output['css'] = "body{background-color:#333;}";
+
+	$output['js'] = "console.log('hello');";
+
+	return $output;
 }
 
 function form($action='', $content=''){
-	?>
-	<form method="post" action="<?php echo $action; ?>">
-		<textarea name="page"><?=$content?></textarea>
+	$content = <<<FORM
+	<form method="post" action="$action">
+		<textarea name="page">$content</textarea>
 		<input type="submit">
 		<input name="_method_delete" value="Deletar página" type="submit">
 	</form>
-	<?php
+FORM;
+	return $content;
 }

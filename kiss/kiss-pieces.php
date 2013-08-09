@@ -8,19 +8,27 @@ function kissPieces(){
 	global $r, $piece;
 
 	//Juntamos as peças
-	pieceGlue();
+	return pieceGlue();
 }
 
 /**
  * Encontra a peça e insere seus dados
  */
 function pieceGlue(){
-	global $r, $piece;
+	global $r, $piece, $js, $css;
 	//Encontrar a peça
 	if(file_exists(ABS_PATH.'kiss-pieces'.DIRECTORY_SEPARATOR.$piece.DIRECTORY_SEPARATOR.$piece.'.php')){
 		require_once(ABS_PATH.'kiss-pieces'.DIRECTORY_SEPARATOR.$piece.DIRECTORY_SEPARATOR.$piece.'.php');
-		$func = $piece.'\\init';
-		$func();
+	}
+
+	$funcInit = $piece.'\\init';
+	$funcQuit = $piece.'\\quit';
+	$funcMain = $piece.'\\main';
+
+	$output = '';
+
+	if(function_exists($funcInit)){
+		$output = $funcInit($output);
 	}
 
 	$verbFunc = (!isset($r['parameters']['_method_delete'])) ?
@@ -28,8 +36,23 @@ function pieceGlue(){
 				$piece.'\\delete';
 
 	if(function_exists($verbFunc)){
-		$verbFunc();
+		$output = $verbFunc($output);
+	}elseif(function_exists($funcMain)){
+		$output = $funcMain($output);
 	}
+
+	if(function_exists($funcQuit)){
+		$output = $funcQuit($output);
+	}
+
+	//Ler opções do piece, mas por enquanto somente page não vira json
+	if($piece!=='page'){
+		$output = json_encode($output);
+	}else{
+
+	}
+
+	return $output;
 }
 
 function pieceRoute($router){

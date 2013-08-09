@@ -123,5 +123,7 @@ function kissMain(){
 	}
 
 	kissSession();
-	kissPieces();
+	
+	$output = kissPieces();
+	echo $output;
 }

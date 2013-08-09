@@ -4,18 +4,29 @@
 * Funções gerais do kiss
 */
 
+global $d;
+
 /**
 * function d
 * Para debug
 */
 function d($var, $quit = 0){
+	global $d;
+
+	ob_start();
+	$info = debug_backtrace();
+
 	echo'<pre>';
+	echo $info[0]['file'];
+	echo '  ::  '.$info[0]['line'].'<br>';
 	if(is_array($var)){
 		print_r($var);
 	}else{
 		var_dump($var);
 	}
 	echo'</pre>';
+
+	$d .= ob_get_clean();
 
 	if($quit){
 		exit();
@@ -62,6 +73,7 @@ function absUrl($url){
 */
 
 function r($url, $data=null, $headers=null){
+	global $js, $css;
 	//Monta e limpa a Url base (Ex.: http://localhost/kiss)
 	$url = fullUrl().'/'.$url;
 
@@ -98,5 +110,12 @@ function r($url, $data=null, $headers=null){
 
 	curl_close($ch);
 
-	return $result;
+	$resultArray = json_decode($result, true);
+
+	if(is_array($resultArray)){
+		$js[] = (isset($resultArray['js'])) ? $resultArray['js'] : '';
+		$css[] = (isset($resultArray['css'])) ? $resultArray['css'] : '';
+	}
+
+	return (isset($resultArray['html'])) ? $resultArray['html'] : $result;
 }

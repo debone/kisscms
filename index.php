@@ -20,3 +20,10 @@ kissInit();
 global $request;
 
 ob_end_flush();
+
+global $d;
+
+if(isset($d)){
+	echo '<hr><br><span style="font-weight:600">DEBUG</span>';
+	echo $d;
+}
