@@ -11,7 +11,9 @@ function get($output){
 	$pageLocal = pageLocal($r['url'][1]);
 
 	if($pageLocal !== ''){
-		$output .= file_get_contents($pageLocal);
+		$data = map($pageLocal);
+		$tplName = (isset($data['template'])) ? $data['template'] : 'page';
+		$output .= r('template/'.$tplName, array('data'=>http_build_query($data)));
 		pieceRoute(array(
 			'edit'
 		));
@@ -56,8 +58,6 @@ function delete(){
 }
 
 function pageLocal($page){
-	global $r;
-
 	if($page == NULL){
 		$page = 0;
 	}
@@ -118,6 +118,24 @@ function footer(){
 
 	$content .= '</body></html>';
 	return $content;
+}
+
+function map($pageLocal){
+	$data = array();
+	$var = '';
+	if($f = fopen($pageLocal,'r')){
+		while(!feof($f)){
+			$line = trim(fgets($f));
+			if($line[0] === '$'){
+				$var = substr(trim($line),1);
+				$data[$var] = '';
+			}elseif($var!=='' && $line!==''){
+				$data[$var] .= $line;
+			}
+		}
+	}
+
+	return $data;
 }
 
 function quit($output){

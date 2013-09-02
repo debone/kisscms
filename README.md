@@ -7,7 +7,7 @@ Tipos de página implementadas por arquivos modelo
 v0.1 REST funcionar - Completa
 v0.2 Tipo de pagina conteudo(pagina?) - Completa
 v0.21 CRUD de conteudo via REST (baretext editing & viewing - NO HTML) - Completa
-v0.3 Sessão de usuários - Completa
+v0.3 Sessão de usuários - Completa (Usuário virou um módulo)
 v0.4 Inserção de JS e CSS nas peças - Completa
 v0.5 Inserção de JS e CSS "globais" nas pages
 v0.6 Mapeamento de paginas 

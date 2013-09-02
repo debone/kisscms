@@ -91,14 +91,15 @@ function r($url, $data=null, $headers=null){
 	if($headers && $headers!=''){
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 	}
+
 	if($data && $data!='' && is_array($data)){
 		$fieldsString = '';
 		foreach ($data as $k => $v) {
-			$fields_string .= $key.'='.urlencode($value).'&';
+			$fieldsString .= $k.'='.urlencode($v).'&';
 		}
-		rtrim($fields_string, '&');
+		rtrim($fieldsString, '&');
 		curl_setopt($ch, CURLOPT_POST, count($data));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $fieldsString);
 	}elseif($data && $data!='' && is_string($data)){
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);

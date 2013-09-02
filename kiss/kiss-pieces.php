@@ -46,6 +46,7 @@ function pieceGlue(){
 	}
 
 	//Ler opções do piece, mas por enquanto somente page não vira json
+	//TODO: Remover dependência da peça "page"
 	if($piece!=='page'){
 		$output = json_encode($output);
 	}else{

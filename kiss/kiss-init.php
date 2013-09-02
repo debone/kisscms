@@ -12,7 +12,6 @@ require(KISS_PATH.'kiss-pieces.php');
 function kissInit(){
 	global $r;
 
-	//Checar se está tudo ok
 	checkKiss();
 
 	// Verbo da requisição (GET,POST,PUT,DELETE)
@@ -31,20 +30,36 @@ function kissInit(){
 	kissMain();
 }
 
+/**
+ * Ao inicializar o sistema precisamos verificar se está tudo ok
+ * Principalmente na primeira execução 
+ */
 function checkKiss(){
 	if(file_exists(ABS_PATH.".htaccess")){
 
 	}
 }
 
+/**
+ * Faz a análise do verbo da requisição
+ * @return string Verbo da requisição
+ */
 function parseVerb(){
 	return $_SERVER['REQUEST_METHOD'];
 }
 
+/**
+ * Faz a análise da URL da requisição
+ * O KISS utiliza a url como caminhos para as peças
+ * @return array Blocos de url para utilização das peças 
+ */
 function parseUrl(){
+	//Remove a parte inicial até a raiz do kiss na URL
 	$r = str_replace($_SERVER['CONTEXT_PREFIX'].'/', '', $_SERVER['REQUEST_URI']);
+	//Separa os caminhos em blocos
 	return array_filter(explode('/', $r));
 }
+
 
 function parseParameters(){
 	$parameters = array();
@@ -122,8 +137,6 @@ function kissMain(){
 		$piece = $r['url'][0];
 	}
 
-	kissSession();
-	
 	$output = kissPieces();
 	echo $output;
 }
