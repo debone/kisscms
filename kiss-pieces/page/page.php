@@ -1,8 +1,10 @@
 <?php
 namespace page;
 
-function init(){
-	global $r;
+function init($config){
+	$config['output'] = 'html';
+
+	return $config;
 }
 
 function get($output){
