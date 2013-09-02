@@ -25,15 +25,17 @@ function pieceGlue(){
 	$funcQuit = $piece.'\\quit';
 	$funcMain = $piece.'\\main';
 
-	$output = '';
+	$config = array();
 
 	if(function_exists($funcInit)){
-		$output = $funcInit($output);
+		$config = $funcInit($config);
 	}
 
 	$verbFunc = (!isset($r['parameters']['_method_delete'])) ?
 				$piece.'\\'.$r['verb'] :
 				$piece.'\\delete';
+
+	$output = '';
 
 	if(function_exists($verbFunc)){
 		$output = $verbFunc($output);
@@ -45,13 +47,11 @@ function pieceGlue(){
 		$output = $funcQuit($output);
 	}
 
-	//Ler opções do piece, mas por enquanto somente page não vira json
-	//TODO: Remover dependência da peça "page"
-	if($piece!=='page'){
+	//Ler opções da peça sobre a saída
+	if(empty($config['output'])){
+		//Padrão de retorno JSON
 		$output = json_encode($output);
-	}else{
-
-	}
+	}//Se não, retorna HTML
 
 	return $output;
 }
