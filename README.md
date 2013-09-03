@@ -10,7 +10,7 @@ v0.21 CRUD de conteudo via REST (baretext editing & viewing - NO HTML) - Complet
 v0.3 Sessão de usuários - Completa (Usuário virou um módulo)
 v0.4 Inserção de JS e CSS nas peças - Completa
 v0.5 Inserção de JS e CSS "globais" nas pages
-v0.6 Mapeamento de paginas 
+v0.6 Mapeamento de paginas (Aliases para paginas) 
 v1.0 Renderização de paginas(HTML & CSS & JS)
 v1.1 Outros tipos de páginas(recursão de inserção - páginas dentro de outras páginas)
 v1.2 Configuração e personalização das páginas via REST 
