@@ -16,10 +16,9 @@ function kissPieces(){
  */
 function pieceGlue(){
 	global $r, $piece, $js, $css;
-	//Encontrar a peça
-	if(file_exists(ABS_PATH.'kiss-pieces'.DIRECTORY_SEPARATOR.$piece.DIRECTORY_SEPARATOR.$piece.'.php')){
-		require_once(ABS_PATH.'kiss-pieces'.DIRECTORY_SEPARATOR.$piece.DIRECTORY_SEPARATOR.$piece.'.php');
-	}
+	
+	//Incluir a peça
+	require_once(ABS_PATH.'kiss-pieces'.DIRECTORY_SEPARATOR.$piece.DIRECTORY_SEPARATOR.$piece.'.php');
 
 	$funcInit = $piece.'\\init';
 	$funcQuit = $piece.'\\quit';

@@ -10,7 +10,7 @@ require(KISS_PATH.'kiss-session.php');
 require(KISS_PATH.'kiss-pieces.php');
 
 function kissInit(){
-	global $r;
+	global $r,$piece;
 
 	checkKiss();
 
@@ -19,6 +19,8 @@ function kissInit(){
 
 	// URL da requisição (/page/2034)
 	$r['url'] = parseUrl();
+	// Peça 
+	$piece = $r['url'][0];
 
 	// Parametros da requisição (GET,POST,JSON)
 	$r['parameters'] = parseParameters();
@@ -57,7 +59,24 @@ function parseUrl(){
 	//Remove a parte inicial até a raiz do kiss na URL
 	$r = str_replace($_SERVER['CONTEXT_PREFIX'].'/', '', $_SERVER['REQUEST_URI']);
 	//Separa os caminhos em blocos
-	return array_filter(explode('/', $r));
+	$r = array_filter(explode('/', $r));
+
+	/**
+	 * Cascading para peça
+	 * $r['url'][0] é sempre uma peça
+	 * 0. Teste rápido se é um (int) -> Não precisa de mais testes, é uma página
+	 * 1. Checar se existe uma peça com o mesmo nome
+	 * 2. Checar se existe um alias para o nome
+	 * 3. Checar se existe uma pagina com o nome
+	 * 4. Erro 404
+	 */
+	$piece = $r[0];
+
+	if(!file_exists(ABS_PATH.'kiss-pieces'.DIRECTORY_SEPARATOR.$piece.DIRECTORY_SEPARATOR.$piece.'.php')){
+		array_unshift($r, 'page');
+	}
+	
+	return $r;
 }
 
 
@@ -126,16 +145,12 @@ function parseFormat(){
  * @return [type] [description]
  */
 function kissMain(){
-	global $r, $piece;
+	global $r;
 	/**
 	 * TODO
 	 * Leitor de aliases e erros 404
 	 */
-	if($r['url'][0] === NULL){
-		$piece = 'page';
-	}else{
-		$piece = $r['url'][0];
-	}
+
 
 	$output = kissPieces();
 	echo $output;
