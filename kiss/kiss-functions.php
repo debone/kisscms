@@ -73,7 +73,7 @@ function absUrl($url){
 */
 
 function r($url, $data=null, $headers=null){
-	global $js, $css;
+	global $r, $js, $css;
 	//Monta e limpa a Url base (Ex.: http://localhost/kiss)
 	$url = fullUrl().'/'.$url;
 
@@ -92,17 +92,19 @@ function r($url, $data=null, $headers=null){
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 	}
 
-	if($data && $data!='' && is_array($data)){
+	if(!empty($data)){
+		if(is_string($data)){
+			$data = array($data);
+		}
+
 		$fieldsString = '';
+		$data['recursion'] = $r['recursion'] + 1;
 		foreach ($data as $k => $v) {
 			$fieldsString .= $k.'='.urlencode($v).'&';
 		}
 		rtrim($fieldsString, '&');
 		curl_setopt($ch, CURLOPT_POST, count($data));
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $fieldsString);
-	}elseif($data && $data!='' && is_string($data)){
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 	}
 
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );

@@ -28,6 +28,11 @@ function kissInit(){
 	// Formato da requisição (HTTP, JSON)
 	$r['format'] = parseFormat();
 
+	// Nível de recursão do KISS
+	$r['recursion'] = parseRecursion();
+
+	d($r['recursion']);
+
 	// Função principal
 	kissMain();
 }
@@ -138,6 +143,19 @@ function parseFormat(){
 	}
 
 	return $format;
+}
+
+function parseRecursion(){
+	global $r;
+
+	if(!empty($r['parameters']['recursion'])){
+		$rec = $r['parameters']['recursion'];
+		//TODO Remover parametro
+	}else{
+		$rec = 0;
+	}
+
+	return $rec;
 }
 
 /**
