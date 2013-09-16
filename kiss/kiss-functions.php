@@ -27,7 +27,7 @@ function d($var, $quit = 0){
 
 	$d .= ob_get_clean();
 
-	if($f = fopen(ABS_PATH.'debug.log','a+')){
+	if($f = fopen(LOG_PATH.'debug.log','a+')){
 		fwrite($f,$d);
 		fclose($f);
 	}
@@ -92,9 +92,9 @@ function r($url, $data=null, $headers=null){
 
 	curl_setopt( $ch, CURLOPT_COOKIE, $cookie );
 
-	if($headers && $headers!=''){
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-	}
+	$headers[] = "Connection: close";
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 	if(!empty($data) && is_string($data)){
 		$data = array($data);
@@ -109,17 +109,23 @@ function r($url, $data=null, $headers=null){
 
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 
+	curl_setopt( $ch, CURLOPT_VERBOSE, TRUE);
+	$fp = fopen(LOG_PATH.'curl'.$r['recursion'].'.log','w+');
+	curl_setopt( $ch, CURLOPT_STDERR, $fp);
+
+	curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+
 	$result = curl_exec($ch);
 
-	//d(curl_getinfo($ch));
+	d(curl_getinfo($ch));
 
 	curl_close($ch);
 
 	$resultArray = json_decode($result, true);
 
 	if(is_array($resultArray)){
-		$js[] = (isset($resultArray['js'])) ? $resultArray['js'] : '';
-		$css[] = (isset($resultArray['css'])) ? $resultArray['css'] : '';
+		$js = (isset($resultArray['js'])) ? $resultArray['js'] : '';
+		$css = (isset($resultArray['css'])) ? $resultArray['css'] : '';
 	}
 
 	return (isset($resultArray['html'])) ? $resultArray['html'] : $result;

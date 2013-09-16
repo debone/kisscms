@@ -168,6 +168,13 @@ function kissMain(){
 	 */
 
 
+	if(function_exists('xdebug_start_trace'))
+		xdebug_start_trace(LOG_PATH.'xdebug'.$r['recursion']);
+
 	$output = kissPieces();
+
+	if(function_exists('xdebug_stop_trace'))
+		xdebug_stop_trace();
+
 	echo $output;
 }
