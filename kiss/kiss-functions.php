@@ -11,22 +11,26 @@ global $d;
 * Para debug
 */
 function d($var, $quit = 0){
-	global $d;
-
+	$d = '';
 	ob_start();
 	$info = debug_backtrace();
 
 	echo'<pre>';
 	echo $info[0]['file'];
 	echo '  ::  '.$info[0]['line'].'<br>';
-	if(is_array($var)){
+/*	if(is_array($var)){
 		print_r($var);
-	}else{
+	}else{*/
 		var_dump($var);
-	}
+	//}
 	echo'</pre>';
 
 	$d .= ob_get_clean();
+
+	if($f = fopen(LOG_PATH.'debug.log','a+')){
+		fwrite($f,$d);
+		fclose($f);
+	}
 
 	if($quit){
 		exit();
@@ -73,7 +77,7 @@ function absUrl($url){
 */
 
 function r($url, $data=null, $headers=null){
-	global $js, $css;
+	global $r, $js, $css;
 	//Monta e limpa a Url base (Ex.: http://localhost/kiss)
 	$url = fullUrl().'/'.$url;
 
@@ -88,34 +92,40 @@ function r($url, $data=null, $headers=null){
 
 	curl_setopt( $ch, CURLOPT_COOKIE, $cookie );
 
-	if($headers && $headers!=''){
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	$headers[] = "Connection: close";
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+	if(!empty($data) && is_string($data)){
+		$data = array($data);
 	}
 
-	if($data && $data!='' && is_array($data)){
-		$fieldsString = '';
-		foreach ($data as $k => $v) {
-			$fieldsString .= $k.'='.urlencode($v).'&';
-		}
-		rtrim($fieldsString, '&');
-		curl_setopt($ch, CURLOPT_POST, count($data));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $fieldsString);
-	}elseif($data && $data!='' && is_string($data)){
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-	}
+	$data['recursion'] = $r['recursion'] + 1;
+	
+	$fieldsString = http_build_query($data);
+
+	curl_setopt($ch, CURLOPT_POST, count($data));
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $fieldsString);
 
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 
+	curl_setopt( $ch, CURLOPT_VERBOSE, TRUE);
+	$fp = fopen(LOG_PATH.'curl'.$r['recursion'].'.log','w+');
+	curl_setopt( $ch, CURLOPT_STDERR, $fp);
+
+	curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+
 	$result = curl_exec($ch);
+
+	d(curl_getinfo($ch));
 
 	curl_close($ch);
 
 	$resultArray = json_decode($result, true);
 
 	if(is_array($resultArray)){
-		$js[] = (isset($resultArray['js'])) ? $resultArray['js'] : '';
-		$css[] = (isset($resultArray['css'])) ? $resultArray['css'] : '';
+		$js = (isset($resultArray['js'])) ? $resultArray['js'] : '';
+		$css = (isset($resultArray['css'])) ? $resultArray['css'] : '';
 	}
 
 	return (isset($resultArray['html'])) ? $resultArray['html'] : $result;

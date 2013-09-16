@@ -28,6 +28,9 @@ function kissInit(){
 	// Formato da requisição (HTTP, JSON)
 	$r['format'] = parseFormat();
 
+	// Nível de recursão do KISS
+	$r['recursion'] = parseRecursion();
+
 	// Função principal
 	kissMain();
 }
@@ -120,7 +123,7 @@ function parseParameters(){
 			$parameters[$field] = $value;
 		}	
 	}
-	
+
 	return $parameters;
 }
 
@@ -140,6 +143,19 @@ function parseFormat(){
 	return $format;
 }
 
+function parseRecursion(){
+	global $r;
+
+	if(!empty($r['parameters']['recursion'])){
+		$rec = $r['parameters']['recursion'];
+		//TODO Remover parametro
+	}else{
+		$rec = 0;
+	}
+
+	return $rec;
+}
+
 /**
  * [kissMain description]
  * @return [type] [description]
@@ -152,6 +168,13 @@ function kissMain(){
 	 */
 
 
+	if(function_exists('xdebug_start_trace'))
+		xdebug_start_trace(LOG_PATH.'xdebug'.$r['recursion']);
+
 	$output = kissPieces();
+
+	if(function_exists('xdebug_stop_trace'))
+		xdebug_stop_trace();
+
 	echo $output;
 }

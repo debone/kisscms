@@ -33,18 +33,15 @@ function post(){
 
 	if($pg = pageLocal($page)){
 		if($f = fopen($pg,'r+')){
-			d('Editada!');
 			fwrite($f,$r['parameters']['page']);
 			fclose($f);
 		}
 	}else{
 		if($f = fopen(SITE_PATH.'page/'.$page.'.kiss','w+')){
-			d('Criada!');
 			fwrite($f,$r['parameters']['page']);
 			fclose($f);
 		}
 	}
-	d('Salvar página');
 }
 
 function delete(){
@@ -55,12 +52,11 @@ function delete(){
 	if($pg = pageLocal($page)){
 		unlink($pg);
 	}
-
-	d('Deletar pagina!');
 }
 
 function pageLocal($page){
-	if($page == NULL){
+	if($page == NULL || !is_numeric($page)){
+		//TODO Tratar erros 404 e fazer aliases
 		$page = 0;
 	}
 
@@ -82,7 +78,6 @@ function edit(){
 		'action'=>absUrl($r['url']), 
 		'content' => file_get_contents($pageLocal)
 	));
-	d('Editar pagina');
 }
 
 function head(){
@@ -95,8 +90,9 @@ function head(){
 
 	if(is_array($css)){
 		$content .= '<style>'; 
-		foreach($css as $code){
-			$content .= $code;
+		foreach($css as $piece=>$code){
+			$content .= "/* ".$piece." CSS */\n";
+			$content .= $code."\n";
 		}
 		$content .= '</style>';
 	}
@@ -112,8 +108,9 @@ function footer(){
 
 	if(is_array($js)){
 		$content .= '<script>';
-		foreach($js as $code){
-			$content .= $code;
+		foreach($js as $piece=>$code){
+			$content .= "/* ".$piece." JS */\n";
+			$content .= $code."\n";
 		}
 		$content .= '</script>';
 	}

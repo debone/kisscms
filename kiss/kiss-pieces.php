@@ -49,6 +49,10 @@ function pieceGlue(){
 	//Ler opções da peça sobre a saída
 	if(empty($config['output'])){
 		//Padrão de retorno JSON
+		//Inclui o nome do modulo + recursao para js e css
+		$output['piece'] = $piece.$r['recursion'];
+		$output['js'] = array_merge((array)$js, array($output['piece']=>$output['js']));
+		$output['css'] = array_merge((array)$css, array($output['piece']=>$output['css']));
 		$output = json_encode($output);
 	}//Se não, retorna HTML
 
