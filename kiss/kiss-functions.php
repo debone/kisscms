@@ -11,22 +11,26 @@ global $d;
 * Para debug
 */
 function d($var, $quit = 0){
-	global $d;
-
+	$d = '';
 	ob_start();
 	$info = debug_backtrace();
 
 	echo'<pre>';
 	echo $info[0]['file'];
 	echo '  ::  '.$info[0]['line'].'<br>';
-	if(is_array($var)){
+/*	if(is_array($var)){
 		print_r($var);
-	}else{
+	}else{*/
 		var_dump($var);
-	}
+	//}
 	echo'</pre>';
 
 	$d .= ob_get_clean();
+
+	if($f = fopen(ABS_PATH.'debug.log','a+')){
+		fwrite($f,$d);
+		fclose($f);
+	}
 
 	if($quit){
 		exit();
@@ -92,24 +96,22 @@ function r($url, $data=null, $headers=null){
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 	}
 
-	if(!empty($data)){
-		if(is_string($data)){
-			$data = array($data);
-		}
-
-		$fieldsString = '';
-		$data['recursion'] = $r['recursion'] + 1;
-		foreach ($data as $k => $v) {
-			$fieldsString .= $k.'='.urlencode($v).'&';
-		}
-		rtrim($fieldsString, '&');
-		curl_setopt($ch, CURLOPT_POST, count($data));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $fieldsString);
+	if(!empty($data) && is_string($data)){
+		$data = array($data);
 	}
+
+	$data['recursion'] = $r['recursion'] + 1;
+	
+	$fieldsString = http_build_query($data);
+
+	curl_setopt($ch, CURLOPT_POST, count($data));
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $fieldsString);
 
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 
 	$result = curl_exec($ch);
+
+	//d(curl_getinfo($ch));
 
 	curl_close($ch);
 

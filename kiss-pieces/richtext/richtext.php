@@ -11,7 +11,7 @@ function main(){
 
 	$output['js'] = "console.log('hello');";
 
-	r('jstest');
+	$output['html'] .= r('jstest');
 
 	return $output;
 }

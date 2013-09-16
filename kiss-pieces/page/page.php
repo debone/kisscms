@@ -19,6 +19,7 @@ function get($output){
 		pieceRoute(array(
 			'edit'
 		));
+		xdebug_stop_trace();
 	}else{
 		$output .= r('richtext', array('piece'=>'page', 'action'=>absUrl($r['url']), 'content'=>''));
 	}
@@ -60,7 +61,8 @@ function delete(){
 }
 
 function pageLocal($page){
-	if($page == NULL){
+	if($page == NULL || is_string($page)){
+		//TODO Tratar erros 404 e fazer aliases
 		$page = 0;
 	}
 

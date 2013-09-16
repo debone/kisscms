@@ -31,8 +31,6 @@ function kissInit(){
 	// Nível de recursão do KISS
 	$r['recursion'] = parseRecursion();
 
-	d($r['recursion']);
-
 	// Função principal
 	kissMain();
 }
@@ -125,7 +123,7 @@ function parseParameters(){
 			$parameters[$field] = $value;
 		}	
 	}
-	
+
 	return $parameters;
 }
 
