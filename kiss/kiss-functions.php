@@ -62,6 +62,22 @@ function absUrl($url){
 }
 
 /**
+ * Faz uma busca no caminho passado e na pasta, retorna o caminho completo se existir
+ * @return [type] [description]
+ */
+function filePath($file, $folder, $PATH = SITE_PATH){
+	$local = '';
+	$fileName = pathinfo($file, PATHINFO_FILENAME);
+	$fileExt = pathinfo($file, PATHINFO_EXTENSION);
+	if(file_exists($PATH.$folder.DIRECTORY_SEPARATOR.$fileName.'.'.$fileExt)){
+		$local = $PATH.$folder.DIRECTORY_SEPARATOR.$fileName.'.'.$fileExt;
+	}else if(file_exists($PATH.$folder.DIRECTORY_SEPARATOR.$fileName.DIRECTORY_SEPARATOR.$fileName.'.'.$fileExt)){
+		$local = $PATH.$folder.DIRECTORY_SEPARATOR.$fileName.DIRECTORY_SEPARATOR.$fileName.'.'.$fileExt;
+	}
+	return $local;
+}
+
+/**
 *	function r()
 *	Faz requisições REST internas
 *
@@ -75,7 +91,6 @@ function absUrl($url){
 *	@return
 *		O resultado da requisição
 */
-
 function r($url, $data=null, $headers=null){
 	global $r, $js, $css;
 	//Monta e limpa a Url base (Ex.: http://localhost/kiss)
@@ -116,8 +131,6 @@ function r($url, $data=null, $headers=null){
 	curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
 
 	$result = curl_exec($ch);
-
-	d(curl_getinfo($ch));
 
 	curl_close($ch);
 

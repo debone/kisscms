@@ -75,7 +75,7 @@ function parseUrl(){
 	 */
 	$piece = $r[0];
 
-	if(!file_exists(ABS_PATH.'kiss-pieces'.DIRECTORY_SEPARATOR.$piece.DIRECTORY_SEPARATOR.$piece.'.php')){
+	if(!filePath($piece.'.php', 'kiss-pieces', ABS_PATH)){
 		array_unshift($r, 'page');
 	}
 	
