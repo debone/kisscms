@@ -14,20 +14,9 @@ function main(){
 	return $output;
 }
 
-function tplLocal($tpl){
-	$tplLocal = '';
-	if(file_exists(ABS_PATH.'site'.DIRECTORY_SEPARATOR.'tpl'.DIRECTORY_SEPARATOR.$tpl.'.tpl')){
-		$tplLocal = ABS_PATH.'site'.DIRECTORY_SEPARATOR.'tpl'.DIRECTORY_SEPARATOR.$tpl.'.tpl';
-	}elseif(file_exists(ABS_PATH.'site'.DIRECTORY_SEPARATOR.'tpl'.DIRECTORY_SEPARATOR.$tpl.DIRECTORY_SEPARATOR.$tpl.'.tpl')){
-		$tplLocal = ABS_PATH.'site'.DIRECTORY_SEPARATOR.'tpl'.DIRECTORY_SEPARATOR.$tpl.DIRECTORY_SEPARATOR.$tpl.'.tpl';
-	}
-
-	return $tplLocal;
-}
-
 function template($tplName, $data){
 	//Se o template existe e o local dele
-	if($tplLocal = tplLocal($tplName)){
+	if($tplLocal = filePath($tplName.'.tpl', 'tpl')){
 
 		//Inclui o template e pega o conteúdo processado pelo php
 		ob_start();

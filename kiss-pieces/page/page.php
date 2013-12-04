@@ -60,13 +60,7 @@ function pageLocal($page){
 		$page = 0;
 	}
 
-	$kissPageLocal = '';
-
-	if(file_exists(SITE_PATH.'page/'.$page.'.kiss')){
-		$kissPageLocal = SITE_PATH.'page/'.$page.'.kiss';
-	}else if(file_exists(SITE_PATH.'page/'.$page.DIRECTORY_SEPARATOR.$page.'.kiss')){
-		$kissPageLocal = SITE_PATH.'page/'.$page.DIRECTORY_SEPARATOR.$page.'.kiss';
-	}
+	$kissPageLocal = filePath($page.'.kiss', 'page');
 
 	return $kissPageLocal;
 }

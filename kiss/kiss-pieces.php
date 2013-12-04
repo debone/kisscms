@@ -18,12 +18,20 @@ function pieceGlue(){
 	global $r, $piece, $js, $css;
 	
 	//Incluir a peça
-	require_once(ABS_PATH.'kiss-pieces'.DIRECTORY_SEPARATOR.$piece.DIRECTORY_SEPARATOR.$piece.'.php');
+	require_once(filePath($piece.'.php', 'kiss-pieces', ABS_PATH));
 
 	$funcInit = $piece.'\\init';
-	$funcQuit = $piece.'\\quit';
 	$funcMain = $piece.'\\main';
+	$funcQuit = $piece.'\\quit';
 
+	/**
+	 * Array de configurações da peça
+	 * @var array
+	 *
+	 * $config['output'] 'JSON', 'HTML' Formata o output da peça para a saída
+	 * TODO $config['dependency'] Define as dependências do peça em relação a outras
+	 * TODO $config['']
+	 */
 	$config = array();
 
 	if(function_exists($funcInit)){
@@ -51,8 +59,11 @@ function pieceGlue(){
 		//Padrão de retorno JSON
 		//Inclui o nome do modulo + recursao para js e css
 		$output['piece'] = $piece.$r['recursion'];
+		//Faz o merge com os outros js e css de recursões
 		$output['js'] = array_merge((array)$js, array($output['piece']=>$output['js']));
 		$output['css'] = array_merge((array)$css, array($output['piece']=>$output['css']));
+		//Deixa o output em branco para o html caso a peça mantenha sem html
+		$output['html'] = (empty($output['html'])) ? '': $output['html'];
 		$output = json_encode($output);
 	}//Se não, retorna HTML
 
