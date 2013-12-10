@@ -60,10 +60,27 @@ function pieceGlue(){
 		//Inclui o nome do modulo + recursao para js e css
 		$output['piece'] = $piece.$r['recursion'];
 		//Faz o merge com os outros js e css de recursões
-		$output['js'] = array_merge((array)$js, array($output['piece']=>$output['js']));
-		$output['css'] = array_merge((array)$css, array($output['piece']=>$output['css']));
-		//Deixa o output em branco para o html caso a peça mantenha sem html
-		$output['html'] = (empty($output['html'])) ? '': $output['html'];
+		if(!empty($js) || !empty($output['js'])){
+			$output['js'] = array_merge((array)$js, array($output['piece']=>$output['js']));
+		}
+		if(!empty($css) || !empty($output['css'])){
+			$output['css'] = array_merge((array)$css, array($output['piece']=>$output['css']));
+		}
+/*		//Deixa o output em branco para o html caso a peça mantenha sem html
+		if(!empty($output['html'])){
+			$output['html'] = $output['html'];
+		}*/
+
+		/**
+		 * {
+		 * 	"html":"",
+		 * 	"js":"",
+		 * 	"css":"",
+		 * 	"error":"",
+		 * 	"error_level":"",
+		 * 	"piece":"",
+		 * }
+		 */
 		$output = json_encode($output);
 	}//Se não, retorna HTML
 

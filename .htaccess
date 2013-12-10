@@ -1,10 +1,9 @@
-
 AcceptPathInfo On
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
-	RewriteBase /kiss-cms/
+	RewriteBase /kisscms/
 
 	RewriteRule ^index\.php$ - [L]
 	RewriteCond %{REQUEST_FILENAME} !-f

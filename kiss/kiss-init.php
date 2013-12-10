@@ -12,6 +12,9 @@ require(KISS_PATH.'kiss-pieces.php');
 function kissInit(){
 	global $r,$piece;
 
+	// Nível de recursão do KISS
+	$r['recursion'] = parseRecursion();
+
 	checkKiss();
 
 	// Verbo da requisição (GET,POST,PUT,DELETE)
@@ -19,6 +22,7 @@ function kissInit(){
 
 	// URL da requisição (/page/2034)
 	$r['url'] = parseUrl();
+
 	// Peça 
 	$piece = $r['url'][0];
 
@@ -28,8 +32,6 @@ function kissInit(){
 	// Formato da requisição (HTTP, JSON)
 	$r['format'] = parseFormat();
 
-	// Nível de recursão do KISS
-	$r['recursion'] = parseRecursion();
 
 	// Função principal
 	kissMain();
@@ -42,6 +44,12 @@ function kissInit(){
 function checkKiss(){
 	if(file_exists(ABS_PATH.".htaccess")){
 
+	}
+
+	//Evita recursão infinita
+	if($r['recursion'] > RECURSION_KISS){
+		//TODO Log de erro/Fatal
+		exit();
 	}
 }
 
@@ -59,23 +67,33 @@ function parseVerb(){
  * @return array Blocos de url para utilização das peças 
  */
 function parseUrl(){
-	//Remove a parte inicial até a raiz do kiss na URL
-	$r = str_replace($_SERVER['CONTEXT_PREFIX'].'/', '', $_SERVER['REQUEST_URI']);
+	//Separa o diretório da requisição
+	$dir = str_replace('index.php', '', $_SERVER['PHP_SELF']);
+	$r = str_replace($dir, '', $_SERVER['REQUEST_URI']);
+	
+	//$r = r('aliases',array())
+	//d(r(NS_KISS,array('url'=>$r)));
+	//d(NS_KISS);
+
 	//Separa os caminhos em blocos
 	$r = array_filter(explode('/', $r));
 
 	/**
 	 * Cascading para peça
 	 * $r['url'][0] é sempre uma peça
-	 * 0. Teste rápido se é um (int) -> Não precisa de mais testes, é uma página
-	 * 1. Checar se existe uma peça com o mesmo nome
-	 * 2. Checar se existe um alias para o nome
-	 * 3. Checar se existe uma pagina com o nome
+	 * 0. Teste rápido se é um (int) -> Não precisa de mais testes, é uma página (x)
+	 * 1. Checar se existe uma peça com o mesmo nome (x)
+	 * 2. Checar se existe um alias para o nome 
+	 * 3. Checar se existe uma pagina com o nome 
 	 * 4. Erro 404
 	 */
 	$piece = $r[0];
+/*
+	d($piece);
+	d(filePath($piece.'.php', 'kiss-pieces'));*/
+	$path = filePath($piece.'.php', 'kiss-pieces', ABS_PATH);
 
-	if(!filePath($piece.'.php', 'kiss-pieces', ABS_PATH)){
+	if(is_int($piece) || empty($path)){
 		array_unshift($r, 'page');
 	}
 	
@@ -166,7 +184,6 @@ function kissMain(){
 	 * TODO
 	 * Leitor de aliases e erros 404
 	 */
-
 
 	if(function_exists('xdebug_start_trace'))
 		xdebug_start_trace(LOG_PATH.'xdebug'.$r['recursion']);

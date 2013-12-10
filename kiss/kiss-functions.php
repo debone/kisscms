@@ -58,7 +58,13 @@ function fullUrl(){
  * Monta uma url absoluto para a url requisitada
  */
 function absUrl($url){
-	return $_SERVER['CONTEXT_PREFIX'].'/'.implode('/',$url);
+	$dir = str_replace('index.php', '', $_SERVER['PHP_SELF']);
+	//Se o diretório já está incluido na URL
+	if(stripos($url, $dir) === 0 || stripos($url, $dir) === 1){
+		return $url;
+	}
+	//Se não, incluir
+	return (!is_string($url)) ? $dir.implode('/',$url) : $dir.$url;
 }
 
 /**
@@ -93,8 +99,12 @@ function filePath($file, $folder, $PATH = SITE_PATH){
 */
 function r($url, $data=null, $headers=null){
 	global $r, $js, $css;
+
+	var_dump($url);
 	//Monta e limpa a Url base (Ex.: http://localhost/kiss)
-	$url = fullUrl().'/'.$url;
+	$url = fullUrl().absUrl($url);
+
+	print_r($url);
 
 	$ch = curl_init($url);
 
@@ -128,7 +138,7 @@ function r($url, $data=null, $headers=null){
 	$fp = fopen(LOG_PATH.'curl'.$r['recursion'].'.log','w+');
 	curl_setopt( $ch, CURLOPT_STDERR, $fp);
 
-	curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+	curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 
 	$result = curl_exec($ch);
 
